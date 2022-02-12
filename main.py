@@ -1,3 +1,4 @@
+import logging
 import os
 from time import sleep
 
@@ -8,6 +9,16 @@ from environs import Env
 env = Env()
 env.read_env()
 
+logger = logging.getLogger("homework")
+logger.setLevel(logging.DEBUG)
+handler_st = logging.StreamHandler()
+handler_st.setLevel(logging.DEBUG)
+strfmt = "[%(asctime)s] [%(name)s] [%(levelname)s] > %(message)s"
+datefmt = "%Y-%m-%d %H:%M:%S"
+formatter = logging.Formatter(fmt=strfmt, datefmt=datefmt)
+handler_st.setFormatter(formatter)
+logger.addHandler(handler_st)
+
 DVMN_TOKEN = os.environ["DVMN_TOKEN"]
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 CHAT_ID = os.environ["CHAT_ID"]
@@ -16,6 +27,7 @@ bot = telegram.Bot(token=BOT_TOKEN)
 chat = bot.get_chat(CHAT_ID)
 
 bot.send_message(text=f'Hello, {chat.first_name}!', chat_id=CHAT_ID)
+logger.info(f"Bot '{bot.name}' is started")
 
 headers = {'Authorization': f'Token {DVMN_TOKEN}'}
 url = 'https://dvmn.org/api/long_polling/'
@@ -40,7 +52,7 @@ while True:
         else:
             time_stamp = attempts['timestamp_to_request']
     except requests.exceptions.ConnectionError:
-        print('Test connection...')
+        logger.info('Test connection...')
         sleep(3)
     except requests.exceptions.Timeout:
         pass
