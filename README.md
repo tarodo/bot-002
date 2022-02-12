@@ -14,6 +14,7 @@
 Необходимы следующие переменные окружения:
 - DVMN_TOKEN - str, токен на DVMN
 - BOT_TOKEN - str, токен от [BotFather](https://t.me/botfather)
+- BOT_REPORTER_TOKEN - Optional[str], токен для бота для логирования
 - CHAT_ID - str, id пользователя в телеграм
 
 ## Local Start

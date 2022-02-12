@@ -7,7 +7,7 @@ import telegram
 from environs import Env
 
 
-def get_logger():
+def get_logger(bot_reporter_token, chat_id):
     class MyLogsHandler(logging.Handler):
         def __init__(self, tg_token: str, chat_id: str):
             super().__init__()
@@ -28,15 +28,16 @@ def get_logger():
     handler_st = logging.StreamHandler()
     handler_st.setFormatter(formatter)
 
-    strfmt = "%(asctime)s :: %(levelname)s :: %(message)s"
-    datefmt = "%d.%m %H:%M:%S"
-    formatter = logging.Formatter(fmt=strfmt, datefmt=datefmt)
+    if bot_reporter_token and chat_id:
+        strfmt = "%(asctime)s :: %(levelname)s :: %(message)s"
+        datefmt = "%d.%m %H:%M:%S"
+        formatter = logging.Formatter(fmt=strfmt, datefmt=datefmt)
 
-    handler_tg = MyLogsHandler(os.environ["BOT_TOKEN"], os.environ["CHAT_ID"])
-    handler_tg.setFormatter(formatter)
+        handler_tg = MyLogsHandler(bot_reporter_token, chat_id)
+        handler_tg.setFormatter(formatter)
 
-    new_logger.addHandler(handler_st)
-    new_logger.addHandler(handler_tg)
+        new_logger.addHandler(handler_st)
+        new_logger.addHandler(handler_tg)
 
     return new_logger
 
@@ -85,9 +86,10 @@ if __name__ == "__main__":
 
     DVMN_TOKEN = os.environ["DVMN_TOKEN"]
     BOT_TOKEN = os.environ["BOT_TOKEN"]
+    BOT_REPORTER_TOKEN = os.getenv("BOT_REPORTER_TOKEN", BOT_TOKEN)
     CHAT_ID = os.environ["CHAT_ID"]
 
-    logger = get_logger()
+    logger = get_logger(bot_reporter_token=BOT_REPORTER_TOKEN, chat_id=CHAT_ID)
 
     bot = telegram.Bot(token=BOT_TOKEN)
     chat = bot.get_chat(CHAT_ID)
