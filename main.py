@@ -16,10 +16,8 @@ def get_logger():
 
         def emit(self, record):
             log_bot = telegram.Bot(token=BOT_TOKEN)
-            log_bot.send_message(
-                self.chat_id,
-                self.format(record)
-            )
+            log_bot.send_message(self.chat_id, self.format(record))
+
     new_logger = logging.getLogger("homework")
     new_logger.setLevel(logging.DEBUG)
 
@@ -44,39 +42,41 @@ def get_logger():
 
 
 def say_hello(chat):
-    chat.send_message(text=f'Hello, {chat.first_name}!')
+    chat.send_message(text=f"Hello, {chat.first_name}!")
     logger.info(f"Bot '{bot.name}' is started")
 
 
 def attempt_checker(dvmn_token, chat):
-    headers = {'Authorization': f'Token {dvmn_token}'}
-    url = 'https://dvmn.org/api/long_polling/'
+    headers = {"Authorization": f"Token {dvmn_token}"}
+    url = "https://dvmn.org/api/long_polling/"
     time_stamp = None
 
     while True:
-        params = {'time_stamp': time_stamp}
+        params = {"time_stamp": time_stamp}
         try:
-            logger.info("New attempt")
             response = requests.get(url, headers=headers, params=params, timeout=90)
             response.raise_for_status()
             attempts = response.json()
-            if attempts['status'] == 'found':
-                time_stamp = attempts['last_attempt_timestamp']
-                for attempt in attempts['new_attempts']:
+            if attempts["status"] == "found":
+                time_stamp = attempts["last_attempt_timestamp"]
+                for attempt in attempts["new_attempts"]:
                     msg = f'Преподаватель проверил работу "{attempt["lesson_title"]}"!\n\n'
-                    if attempt['is_negative']:
-                        msg += 'Придется поработать!\n'
+                    if attempt["is_negative"]:
+                        msg += "Придется поработать!\n"
                         msg += f'{attempt["lesson_url"]}'
                     else:
-                        msg += 'Наконец ты справился!'
+                        msg += "Наконец ты справился!"
                     chat.send_message(text=msg)
             else:
-                time_stamp = attempts['timestamp_to_request']
+                time_stamp = attempts["timestamp_to_request"]
         except requests.exceptions.ConnectionError:
-            logger.info('Test connection...')
+            logger.info("Test connection...")
             sleep(3)
         except requests.exceptions.Timeout:
             pass
+        except ZeroDivisionError as e:
+            logger.exception("division by zero")
+            sleep(3)
 
 
 if __name__ == "__main__":
