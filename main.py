@@ -19,8 +19,8 @@ class MyLogsHandler(logging.Handler):
 
 
 def get_logger(bot_reporter_token, chat_id):
-    new_logger = logging.getLogger("homework")
-    new_logger.setLevel(logging.DEBUG)
+    logger = logging.getLogger("homework")
+    logger.setLevel(logging.DEBUG)
 
     strfmt = "[%(asctime)s] [%(name)s] [%(levelname)s] > %(message)s"
     datefmt = "%Y-%m-%d %H:%M:%S"
@@ -37,10 +37,10 @@ def get_logger(bot_reporter_token, chat_id):
         handler_tg = MyLogsHandler(bot_reporter_token, chat_id)
         handler_tg.setFormatter(formatter)
 
-        new_logger.addHandler(handler_st)
-        new_logger.addHandler(handler_tg)
+        logger.addHandler(handler_st)
+        logger.addHandler(handler_tg)
 
-    return new_logger
+    return logger
 
 
 def say_hello(chat):
