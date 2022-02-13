@@ -71,9 +71,6 @@ def attempt_checker(dvmn_token, bot, chat_id):
             sleep(3)
         except requests.exceptions.Timeout:
             pass
-        except ZeroDivisionError as e:
-            logger.exception("division by zero")
-            sleep(3)
 
 
 if __name__ == "__main__":
