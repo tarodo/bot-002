@@ -43,12 +43,12 @@ def get_logger(bot_reporter_token, chat_id):
     return logger
 
 
-def say_hello(chat):
-    chat.send_message(text=f"Hello, {chat.first_name}!")
+def say_hello(bot, chat_id):
+    bot.send_message(chat_id=chat_id, text=f"I'm ready!")
     logger.info(f"Bot '{bot.name}' is started")
 
 
-def attempt_checker(dvmn_token, chat):
+def attempt_checker(dvmn_token, bot, chat_id):
     headers = {"Authorization": f"Token {dvmn_token}"}
     url = "https://dvmn.org/api/long_polling/"
     time_stamp = None
@@ -68,7 +68,7 @@ def attempt_checker(dvmn_token, chat):
                         msg += f'{attempt["lesson_url"]}'
                     else:
                         msg += "Наконец ты справился!"
-                    chat.send_message(text=msg)
+                    bot.send_message(chat_id=chat_id, text=msg)
             else:
                 time_stamp = attempts["timestamp_to_request"]
         except requests.exceptions.ConnectionError:
@@ -93,7 +93,6 @@ if __name__ == "__main__":
     logger = get_logger(bot_reporter_token=BOT_REPORTER_TOKEN, chat_id=CHAT_ID)
 
     bot = telegram.Bot(token=BOT_TOKEN)
-    chat = bot.get_chat(CHAT_ID)
 
-    say_hello(chat)
-    attempt_checker(DVMN_TOKEN, chat)
+    say_hello(bot, CHAT_ID)
+    attempt_checker(DVMN_TOKEN, bot, CHAT_ID)
