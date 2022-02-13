@@ -43,11 +43,6 @@ def get_logger(bot_reporter_token, chat_id):
     return logger
 
 
-def say_hello(bot, chat_id):
-    bot.send_message(chat_id=chat_id, text=f"I'm ready!")
-    logger.info(f"Bot '{bot.name}' is started")
-
-
 def attempt_checker(dvmn_token, bot, chat_id):
     headers = {"Authorization": f"Token {dvmn_token}"}
     url = "https://dvmn.org/api/long_polling/"
@@ -94,5 +89,5 @@ if __name__ == "__main__":
 
     bot = telegram.Bot(token=BOT_TOKEN)
 
-    say_hello(bot, CHAT_ID)
+    logger.info(f"Bot '{bot.name}' is started")
     attempt_checker(DVMN_TOKEN, bot, CHAT_ID)
