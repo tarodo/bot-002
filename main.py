@@ -7,17 +7,18 @@ import telegram
 from environs import Env
 
 
+class MyLogsHandler(logging.Handler):
+    def __init__(self, tg_token: str, chat_id: str):
+        super().__init__()
+        self.token = tg_token
+        self.chat_id = chat_id
+
+    def emit(self, record):
+        log_bot = telegram.Bot(token=BOT_TOKEN)
+        log_bot.send_message(self.chat_id, self.format(record))
+
+
 def get_logger(bot_reporter_token, chat_id):
-    class MyLogsHandler(logging.Handler):
-        def __init__(self, tg_token: str, chat_id: str):
-            super().__init__()
-            self.token = tg_token
-            self.chat_id = chat_id
-
-        def emit(self, record):
-            log_bot = telegram.Bot(token=BOT_TOKEN)
-            log_bot.send_message(self.chat_id, self.format(record))
-
     new_logger = logging.getLogger("homework")
     new_logger.setLevel(logging.DEBUG)
 
