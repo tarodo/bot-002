@@ -75,7 +75,6 @@ def attempt_checker(dvmn_token, bot, chat_id):
 
 if __name__ == "__main__":
     env = Env()
-    env.read_env()
 
     DVMN_TOKEN = os.environ["DVMN_TOKEN"]
     BOT_TOKEN = os.environ["BOT_TOKEN"]
