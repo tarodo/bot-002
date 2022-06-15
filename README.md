@@ -21,3 +21,9 @@
 ```
 python main.py
 ```
+
+## Local Start with Docker
+```shell
+docker build -t bot007 .
+docker run --env-file .env bot007
+```
