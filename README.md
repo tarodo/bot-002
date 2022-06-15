@@ -27,3 +27,16 @@ python main.py
 docker build -t bot007 .
 docker run --env-file .env bot007
 ```
+
+## Heroku Start with Docker
+1. Prepare heroku console
+    ```shell
+    heroku update beta
+    heroku plugins:install @heroku-cli/plugin-manifest
+    heroku create your-app-name --manifest
+    ```
+2. Add variables to Heroku app
+3. Push master/main to heroku
+    ```shell
+    git push heroku master
+    ```
